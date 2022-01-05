@@ -265,7 +265,7 @@ exports.searchFilters = async (req, res) => {
     return await handleQuery(req, res, query);
   }
 
-  const allCats = Category.find({});
+  const allCats = await Category.find({});
   const cats = category ? category.map(c => ObjectId(c)) : allCats.map(c => c._id);
 
   delete req.body.query;
@@ -278,9 +278,9 @@ exports.searchFilters = async (req, res) => {
       $and: [
         {price: {$gte: price[0], $lte: price[1]}},
         {...req.body}, 
-        {category: { $in: cats }}]
+        {category: { $in: cats }}
+      ]
     }}
     ]);
-
   return res.status(200).json(products);
 };
